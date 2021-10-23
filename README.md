@@ -17,7 +17,7 @@ traduce las stopwords al vocabulario standard
 
 ## inverted_index.py
 
-INPUT: nombre del archivo (sin formato)
+INPUT: no toma input
 
 EJEMPLO: libro1
 
