@@ -6,21 +6,19 @@ def getIndex(fileName):
     output = {}
     for line in lines:
         line = line.replace("\n","")
-        array = line.split(',')
-        for things in array:
-            if not things == array[0]:
-                output[array[0]] = things
+        array = line.split(':')
+        output[array[0]] = array[1]
     return output
 
         
 
 def L(word):
     locations = set()
-    for filex in os.listdir(os.getcwd()):
-        if filex.endswith("-inverted-array.dat"):
-            index = getIndex(filex)
-            if word in index:
-                locations.add(filex)
+    index = getIndex("inverted-index.dat")
+    if word in index:
+        list_of_places = index[word].split(',')
+        for elem in list_of_places:
+            locations.add(elem)
     return locations
             
     return False

@@ -1,6 +1,9 @@
 import os
 import random
 
+dictionary = {}
+
+
 def getwordsInFile(fileName):
 
     array = []
@@ -9,19 +12,11 @@ def getwordsInFile(fileName):
     openFile.close()
     return array
 
-def position_atacher(array):
-    internal_array = []
-    external_array = [[0 for x in range(0)] for y in range(0)] 
-    character_count = 0
-    for i in range(len(array)):
-        internal_array = [array[i], str(i)]
-        external_array.append(internal_array)
-    return external_array
 
 def RemoveProblematicSymbols(array):
     #Made with spanish characters in mind
     for i in range(len(array)):
-        word = array[i][0]
+        word = array[i]
 
         #UTF-8
         
@@ -29,18 +24,21 @@ def RemoveProblematicSymbols(array):
         word = word.replace("Ã\xad","i")
         word = word.replace("Â«","")
         word = word.replace("Â»","")
+        word = word.replace("Ã‰","E")
         word = word.replace("Ã©","e")
         word = word.replace("Ã³","o")
         word = word.replace("Ãº","u")
         word = word.replace("Ã±","n")
         word = word.replace("Ãš","u")
         word = word.replace("Âº","")
+        word = word.replace("Ã¢","a")
         
 
         #Single characters
         word = word.replace("Ã","a")
         word = word.replace("»","u")
         word = word.replace("â","")
+        
 
         #Simbolos
         word = word.replace(",","")
@@ -75,7 +73,7 @@ def RemoveProblematicSymbols(array):
 
         
         
-        array[i][0] = word
+        array[i] = word
     return array
 
 
@@ -83,28 +81,26 @@ def remove_stop_words(array):
     bad_array = getwordsInFile("stop_words_CLEAN.txt")
     output_array = [[0 for x in range(0)] for y in range(0)] 
     for element in array:
-        if element[0] not in bad_array:
+        if element not in bad_array:
             output_array.append(element)
     return output_array
 
-def createInvertedIndex(array, filename):
-    Openfile = open(filename, "w")
-    dictionary = {}
-    requires_removal = False
-    size = 0 
-    for i in range(len(array)):
-        word = array[i][0]
-        if word in dictionary:
-            dictionary[word] = dictionary[word] + "," + array[i][1]
-        else:
-            dictionary[word] = "," + array[i][1]
-        if i > 500:
-            requires_removal = True
-        size = size + 1
 
-    #Randomly removes elements untill you have 500
+def createInvertedIndex(array, filename):
+    requires_removal = False
+    for i in range(len(array)):
+        word = array[i]
+        if word in dictionary:
+                if filename not in dictionary[word]:
+                    dictionary[word] = dictionary[word] + "," + filename
+        else:
+            dictionary[word] = ":" + filename
+
+
+#Randomly removes elements untill you have 500     
+def deleteExcess(requires_removal):
     random_factor = 0
-    size_removal = size - 500
+    size_removal = len(dictionary) - 500
     while requires_removal:
         if size_removal == 0:
             requires_removal = False
@@ -118,8 +114,9 @@ def createInvertedIndex(array, filename):
             size_removal = size_removal - 1
         else:
             random_factor = random_factor + 1
-        
 
+def write_dictionary(filename):
+    Openfile = open(filename, "w")
     for key in sorted(dictionary):
         value = dictionary[key]
         Openfile.write(key + value + "\n")
@@ -127,13 +124,16 @@ def createInvertedIndex(array, filename):
 
 
 
-filename = input()
-array = getwordsInFile(filename + ".txt")
-new_array = position_atacher(array)
-new_array = RemoveProblematicSymbols(new_array)
-new_array = remove_stop_words(new_array)
-print(new_array)
-createInvertedIndex(new_array, filename + "-inverted-array.dat")
+size = 0
+for document in ["libro1.txt", "libro2.txt", "libro3.txt", "libro4.txt", "libro5.txt", "libro6.txt"]:
+    array = getwordsInFile(document)
+    array = RemoveProblematicSymbols(array)
+    array = remove_stop_words(array)
+    size = createInvertedIndex(array, document)
+    print(array)
+if len(dictionary) > 500:
+    deleteExcess(True)
+write_dictionary("inverted-index.dat")
 
         
         
