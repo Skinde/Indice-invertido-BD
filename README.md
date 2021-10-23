@@ -38,6 +38,6 @@ EJ:print(AND(L("acaba"),L("afortunadamente")))
 OUTPUT: el codigo se ejecuta de manera directa pero en el anterior ejemplo devuelve un set el cual contiene todos los indices con los archivos (y por tanto los archivos)
 
 
-Notas generales:
+## Notas
 Por temas de tiempo algunas de las estructuras son ineficientes especificamente: Stoplist deberia ser un tree para evitar O(n^2), query no deberia ejecutar codigo directo.
 si alguien piensa usar este codigo tomar en cuenta que se recomiendan cambios
