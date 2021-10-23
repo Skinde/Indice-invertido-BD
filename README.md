@@ -19,8 +19,6 @@ traduce las stopwords al vocabulario standard
 
 INPUT: no toma input
 
-EJEMPLO: libro1
-
 OUTPUT: creará un archivo -inverted-index.txt
 
 Crea el inverted index una simple lista, para su uso eficiente se puede insertar dentro de un diccionario para la lectura
